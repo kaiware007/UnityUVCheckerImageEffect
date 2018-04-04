@@ -8,10 +8,10 @@ Image effect of UV Check pattern for Unity3D
 - Customizable rotate angle (90 degrees unit)
 - Customizable X / Y Flip
 
-![image001](images/image004.jpg)
+![image004](Images/image004.jpg)
 
-![image001](images/image001.jpg)
+![image001](Images/image001.jpg)
 
-![image001](images/image002.jpg)
+![image002](Images/image002.jpg)
 
-![image001](images/image003.jpg)
+![image003](Images/image003.jpg)
