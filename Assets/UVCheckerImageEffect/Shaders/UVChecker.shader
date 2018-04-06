@@ -95,7 +95,8 @@
 			int _DivNumX;
 			int _DivNumY;
 			half2 _GridWidth;
-			
+			float _Alpha;
+
 			float box(float2 _st, float2 _size){
 				_size = float2(0.5, 0.5) - _size * 0.5;
 				float2 uv = smoothstep(_size, _size + float2(1e-4, 1e-4), _st);
@@ -146,8 +147,11 @@
 				float gridNo = saturate(gridNoX + gridNoY + gridDot);
 
 				fixed4 gridCol = fixed4(hsv2rgb(hsv), 1);
+				
+				fixed4 uvCol = lerp(lerp(gridCol, fixed4(1,1,1,1), gridLine), fixed4(1,1,1,1), gridNo);
+				fixed4 texCol = tex2D(_MainTex, i.uv);
 
-				return lerp(lerp(gridCol, fixed4(1,1,1,1), gridLine), fixed4(1,1,1,1), gridNo);
+				return lerp(texCol, uvCol, _Alpha);
 			}
 			ENDCG
 		}

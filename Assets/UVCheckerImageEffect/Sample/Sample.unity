@@ -212,10 +212,11 @@ MonoBehaviour:
   divNum: {x: 16, y: 9}
   hueMin: 0
   hueMax: 1
-  gridWidth: {x: 0.98, y: 0.98}
+  gridWidth: {x: 0.95, y: 0.95}
   rotateAngle: 0
   flipX: 0
   flipY: 0
+  alpha: 1
 --- !u!81 &1775274117
 AudioListener:
   m_ObjectHideFlags: 0

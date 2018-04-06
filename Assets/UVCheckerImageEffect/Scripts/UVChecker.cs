@@ -23,6 +23,9 @@ public class UVChecker : CustomImageEffectBase {
     public bool flipX = false;
     public bool flipY = false;
 
+    [Range(0,1)]
+    public float alpha = 1;
+
     public override string ShaderName
     {
         get
@@ -43,6 +46,8 @@ public class UVChecker : CustomImageEffectBase {
 
         material.SetFloat("_HueMin", hueMin);
         material.SetFloat("_HueMax", hueMax);
+
+        material.SetFloat("_Alpha", alpha);
 
         material.SetVector("_GridWidth", gridWidth);
 
