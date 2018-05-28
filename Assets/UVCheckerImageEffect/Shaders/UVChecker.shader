@@ -54,7 +54,7 @@
 
 				int p = (int)trunc(pow(10, index));
 
-				gridNo = DigitBin(trunc(trunc(value / p) % 10));
+				gridNo = DigitBin(int(floor(mod((float)value / p, 10.0))));
 
 				return floor(mod((gridNo / pow(2.0, floor(frac(uv.x * maxDigits) * 4.0) + (floor(uv.y * 5.0) * 4.0))), 2.0));
 			}
