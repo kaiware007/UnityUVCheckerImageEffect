@@ -11,6 +11,13 @@ public class UVChecker : CustomImageEffectBase {
         Angle270
     }
 
+    public enum DrawMode
+    {
+        HUE,
+        CIRCLE,
+        CHECKER
+    }
+
     public Vector2Int divNum = new Vector2Int(8, 8);
     [Range(0,1)]
     public float hueMin = 0;
@@ -25,6 +32,8 @@ public class UVChecker : CustomImageEffectBase {
 
     [Range(0,1)]
     public float alpha = 1;
+
+    public DrawMode drawMode = DrawMode.HUE;
 
     public override string ShaderName
     {
@@ -86,6 +95,29 @@ public class UVChecker : CustomImageEffectBase {
                 material.DisableKeyword("_ROTATEFLAG_ANGLE180");
 
                 material.EnableKeyword("_ROTATEFLAG_ANGLE270");
+                break;
+        }
+
+        switch (drawMode)
+        {
+            case DrawMode.HUE:
+                material.EnableKeyword("_DRAWMODE_HUE");
+
+                material.DisableKeyword("_DRAWMODE_CIRCLE");
+                material.DisableKeyword("_DRAWMODE_CHECKER");
+                break;
+            case DrawMode.CIRCLE:
+                material.DisableKeyword("_DRAWMODE_HUE");
+
+                material.EnableKeyword("_DRAWMODE_CIRCLE");
+
+                material.DisableKeyword("_DRAWMODE_CHECKER");
+                break;
+            case DrawMode.CHECKER:
+                material.DisableKeyword("_DRAWMODE_HUE");
+                material.DisableKeyword("_DRAWMODE_CIRCLE");
+
+                material.EnableKeyword("_DRAWMODE_CHECKER");
                 break;
         }
 

@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Shader: {fileID: 4800000, guid: f645a789e8f09b5439e80a37ccadc9db, type: 3}
-  divNum: {x: 16, y: 9}
+  divNum: {x: 19, y: 10}
   hueMin: 0
   hueMax: 1
   gridWidth: {x: 0.95, y: 0.95}
@@ -217,6 +217,7 @@ MonoBehaviour:
   flipX: 0
   flipY: 0
   alpha: 1
+  drawMode: 0
 --- !u!81 &1775274117
 AudioListener:
   m_ObjectHideFlags: 0
