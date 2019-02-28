@@ -6,7 +6,7 @@
 		[KeywordEnum(ANGLE0, ANGLE90, ANGLE180, ANGLE270)] _ROTATEFLAG("Rotation", Float) = 0
 		[Toggle] _FLIP_X("Flip X", Float) = 0
 		[Toggle] _FLIP_Y("Flip Y", Float) = 0
-		[KeywordEnum(DRAWMODE_HUE, DRAWMODE_CIRCLE, DRAWMODE_CHECKER)] _DRAW_MODE("Drae Mode", Float) = 0
+		[KeywordEnum(DRAWMODE_HUE, DRAWMODE_CIRCLE, DRAWMODE_CHECKER, DRAWMODE_COLOR)] _DRAW_MODE("Draw Mode", Float) = 0	
 	}
 	SubShader
 	{
@@ -20,7 +20,7 @@
 			#pragma fragment frag
 			
 			#pragma multi_compile _ROTATEFLAG_ANGLE0 _ROTATEFLAG_ANGLE90 _ROTATEFLAG_ANGLE180 _ROTATEFLAG_ANGLE270
-			#pragma multi_compile _DRAWMODE_HUE _DRAWMODE_CIRCLE _DRAWMODE_CHECKER
+			#pragma multi_compile _DRAWMODE_HUE _DRAWMODE_CIRCLE _DRAWMODE_CHECKER _DRAWMODE_COLOR
 			#pragma shader_feature _ _FLIP_X_ON
 			#pragma shader_feature _ _FLIP_Y_ON
 
@@ -96,7 +96,12 @@
 			int _DivNumX;
 			int _DivNumY;
 			half2 _GridWidth;
-			
+			float _Alpha;
+
+			float _ColorHue;
+			float _ColorSat;
+			float _ColorVal;
+
 			float box(float2 _st, float2 _size){
 				_size = float2(0.5, 0.5) - _size * 0.5;
 				float2 uv = smoothstep(_size, _size + float2(1e-4, 1e-4), _st);
@@ -127,6 +132,7 @@
 				uv2.x = 1.0 - uv.y;
 				uv2.y = uv.x;
 #endif
+
 				float2 tile = half2(_DivNumX, _DivNumY);
 				half2 uv_tiling = frac(uv2 * tile);
 				half2 uvTilePos = floor(uv2 * tile);
@@ -146,23 +152,26 @@
 
 				float gridNo = saturate(gridNoX + gridNoY + gridDot);
 
+				fixed4 texCol = tex2D(_MainTex, i.uv);
+
 #ifdef _DRAWMODE_HUE
 				fixed4 gridCol = fixed4(hsv2rgb(hsv), 1);
-				return lerp(lerp(gridCol, fixed4(1,1,1,1), gridLine), fixed4(1,1,1,1), gridNo);
+				return lerp(texCol, lerp(lerp(gridCol, fixed4(1,1,1,1), gridLine), fixed4(1,1,1,1), gridNo), _Alpha);
 #elif _DRAWMODE_CIRCLE
 				fixed circleLen = length(uv_tiling - float2(0.5, 0.5));
 				fixed4 gridCol = (circleLen <= 0.5) ? circleLen >= 0.45 ? fixed4(1,1,1,1) : fixed4(0,0,0,0) : fixed4(0,0,0,0);
-
-				return lerp(gridCol, fixed4(1,1,1,1), gridLine);
+				return lerp(texCol, lerp(gridCol, fixed4(1,1,1,1), gridLine), _Alpha);
 #elif _DRAWMODE_CHECKER
 				int2 gg = (floor(uv2 * tile));
 				float grco = (gg.x + gg.y) % 2;
 
 				fixed4 gridCol = lerp(fixed4(1,0,0,1), fixed4(0,0,1,1), grco);
-				return lerp(lerp(gridCol, fixed4(1,1,1,1), gridLine), fixed4(1,1,1,1), gridNo);
+				return lerp(texCol, lerp(lerp(gridCol, fixed4(1,1,1,1), gridLine), fixed4(1,1,1,1), gridNo), _Alpha);
+#elif _DRAWMODE_COLOR
+				return lerp(texCol, fixed4(hsv2rgb(half3(_ColorHue, _ColorSat, _ColorVal)), 1), _Alpha);
 #else
 				fixed4 gridCol = fixed4(0,0,0,1);
-				return lerp(gridCol, fixed4(1,1,1,1), gridLine);
+				return lerp(texCol, lerp(gridCol, fixed4(1,1,1,1), gridLine), _Alpha);
 #endif
 			}
 			ENDCG

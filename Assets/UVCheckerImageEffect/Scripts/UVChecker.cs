@@ -15,7 +15,8 @@ public class UVChecker : CustomImageEffectBase {
     {
         HUE,
         CIRCLE,
-        CHECKER
+        CHECKER,
+        COLOR,
     }
 
     public Vector2Int divNum = new Vector2Int(8, 8);
@@ -32,6 +33,13 @@ public class UVChecker : CustomImageEffectBase {
 
     [Range(0,1)]
     public float alpha = 1;
+
+    [Range(0, 1)]
+    public float colorHue = 0;
+    [Range(0, 1)]
+    public float colorSat = 1;
+    [Range(0, 1)]
+    public float colorVal = 1;
 
     public DrawMode drawMode = DrawMode.HUE;
 
@@ -60,8 +68,11 @@ public class UVChecker : CustomImageEffectBase {
 
         material.SetVector("_GridWidth", gridWidth);
 
-
+        material.SetFloat("_ColorHue", colorHue);
+        material.SetFloat("_ColorSat", colorSat);
+        material.SetFloat("_ColorVal", colorVal);
     }
+
     public void UpdateFadeMaskFlipRotation()
     {
         switch (rotateAngle)
@@ -105,6 +116,7 @@ public class UVChecker : CustomImageEffectBase {
 
                 material.DisableKeyword("_DRAWMODE_CIRCLE");
                 material.DisableKeyword("_DRAWMODE_CHECKER");
+                material.DisableKeyword("_DRAWMODE_COLOR");
                 break;
             case DrawMode.CIRCLE:
                 material.DisableKeyword("_DRAWMODE_HUE");
@@ -112,12 +124,21 @@ public class UVChecker : CustomImageEffectBase {
                 material.EnableKeyword("_DRAWMODE_CIRCLE");
 
                 material.DisableKeyword("_DRAWMODE_CHECKER");
+                material.DisableKeyword("_DRAWMODE_COLOR");
                 break;
             case DrawMode.CHECKER:
                 material.DisableKeyword("_DRAWMODE_HUE");
                 material.DisableKeyword("_DRAWMODE_CIRCLE");
+                material.DisableKeyword("_DRAWMODE_COLOR");
 
                 material.EnableKeyword("_DRAWMODE_CHECKER");
+                break;
+            case DrawMode.COLOR:
+                material.DisableKeyword("_DRAWMODE_HUE");
+                material.DisableKeyword("_DRAWMODE_CIRCLE");
+                material.DisableKeyword("_DRAWMODE_CHECKER");
+
+                material.EnableKeyword("_DRAWMODE_COLOR");
                 break;
         }
 
